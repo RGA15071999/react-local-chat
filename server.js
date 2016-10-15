@@ -20,16 +20,16 @@ const server = http.createServer((req, res) => {
 			});
 			break;
 		case '/connected':
-			res.end(`${++currentUsers}`)
+			res.end(`${++currentUsers}`);
 			break;
 		case '/disconnect':
 			if (currentUsers === 0)
-				res.end()
+				res.end();
 			else
-				res.end(`${--currentUsers}`)
+				res.end(`${--currentUsers}`);
 			break;
 		case '/users':
-			res.end(`${currentUsers}`)
+			res.end(`${currentUsers}`);
 			break;
 		case '/message':
 			let body = [];

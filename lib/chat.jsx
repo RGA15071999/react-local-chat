@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import MsgInput from './MsgInput';
 import StatusBar from './StatusBar';
 import ChatHistory from './chathistory';
-
 import {server_addr} from './globals';
 
 class ChatApp extends React.Component {
@@ -13,14 +12,12 @@ class ChatApp extends React.Component {
   constructor() {
     super();
     this.state = {msgs : []};
+    this.disconnect_user = this.disconnect_user.bind(this);
   }
 
   async componentDidMount() {
-
-    await fetch(`${server_addr}/connected`);
-
     setInterval(async () => {
-      let request = server_addr + '/all_messages';
+      let request = `${server_addr}/all_messages`;
       let messageHistory = await fetch(request);
       let all_history = await messageHistory.json();
       this.setState({msgs: all_history.payload});
@@ -28,6 +25,9 @@ class ChatApp extends React.Component {
 
   }
 
+  async disconnect_user() {
+    await fetch(`${server_addr}/disconnect`);
+  }
 
   render() {
     let main_container = {
@@ -38,7 +38,7 @@ class ChatApp extends React.Component {
     return (
       <div style = {main_container}>
         <StatusBar />
-        <ChatHistory
+        <ChatHistory ref="chatHist"   
           messages={this.state.msgs}
           />
         <MsgInput

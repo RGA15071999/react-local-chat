@@ -1,13 +1,14 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default
 
 class ChatHistory extends React.Component {
   constructor() {
     super();
-    this.state = {msgs : []};
+    this.state = {msgs : [], scrollTop : 0};
   }
 
   render() {
@@ -28,14 +29,13 @@ class ChatHistory extends React.Component {
       padding: '.25rem',
       width: '100%',
     };
-
     let messageList = this.props.messages.map(function(message) {
       return (
         <li style = {listyle}>{message}</li>
       );
     });
     return (
-      <ul style = {styles}>
+      <ul id = 'test' style = {styles}>
         {messageList}
       </ul>
     );

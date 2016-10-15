@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {server_addr} from './globals';
+
 export default
 class MsgInput extends React.Component {
   constructor(){
@@ -12,25 +13,30 @@ class MsgInput extends React.Component {
     this.state = {msg : '', username: ''};
   }
    async click_handler(event) {
-    if((event.button == 0 || event.key == 'Enter') && this.state.msg !== '') {
+    if((event.button == 0 || event.key == 'Enter')
+        && this.state.msg !== ''&& this.state.username !== '') {
       let req_opts = {
         method:'post',
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }),
-        body:JSON.stringify({'msg':this.state.username+': '+this.state.msg})
+        body:JSON.stringify({'msg':`${this.state.username}:${this.state.msg}`})
       };
-      let request = server_addr + '/message'
+      let request = `${server_addr}/message`
       await fetch(request, req_opts);
       this.props.updater(this.state.msg);
       this.setState({msg: '', username : this.state.username});
+      let node = document.getElementById('test');
+      node.scrollTop = node.scrollHeight;
   }
 }
+
   form_changed2(e) {
     const userName = e.currentTarget.value;
     this.setState({msg:this.state.msg, username:userName});
   }
+
   form_changed (e) {
     const letter = e.currentTarget.value;
     this.setState({msg:letter, username: this.state.username});
@@ -70,24 +76,27 @@ class MsgInput extends React.Component {
     return (
       <div>
         <table>
-          <tr>
-            <td>
-              <input type="text"
-                      onChange={this.form_changed2}
-                      value = {this.state.username}
-                      style={textInput}
-                      placeholder='Your Name' />
-            </td>
-            <td>
-            <input type="text"
-                    style={textInput}
-                    onChange={this.form_changed}
-                    value={this.state.msg}
-                    onKeyDown = {this.click_handler}
-                    placeholder='Message' />
-            </td>
-          </tr>
-        </table>
+            <tbody>
+              <tr>
+                <td>
+                  <input type="text"
+                          onChange={this.form_changed2}
+                          value = {this.state.username}
+                          style={textInput}
+                          placeholder='Your Name' />
+                </td>
+                <td>
+                <input type="text"
+                        style={textInput}
+                        onChange={this.form_changed}
+                        value={this.state.msg}
+                        onKeyDown = {this.click_handler}
+                        placeholder='Message' />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
         <button style = {sendMsgButton} onClick = {this.click_handler}>
 	        Send
         </button>

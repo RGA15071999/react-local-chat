@@ -5,15 +5,15 @@ import {server_addr} from './globals';
 
 export default
 class StatusBar extends React.Component{
+
   constructor(){
     super();
     this.state = {usersNumber : 0};
   }
+
    componentDidMount(){
     setInterval(async()=>{
-    console.log('callled');
-    const resp = await fetch(server_addr+"/users");
-    console.log(server_addr+"/users");
+    const resp = await fetch(`${server_addr}/users`);
     const users = await resp.json();
     if (users != this.state.usersNumber)
       this.setState({usersNumber: users});
@@ -27,13 +27,12 @@ class StatusBar extends React.Component{
       color: '#00ff9f'
     };
     let s = {
-      width:'700',
-      height:'40',
+      width:'700px',
+      height:'40px',
       textAlign:'center',
-      borderRadius:'10',
+      borderRadius:'10px',
       backgroundColor:'#7e7a85',
-      marginLeft:'auto',
-      marginRight:'auto'
+      margin: '0px auto'
     }
     return(
       <div style = {s}>
