@@ -18,7 +18,6 @@ class ChatApp extends React.Component {
   async componentWillUnmount() {
     await fetch(`${server_addr}/disconnect`);
   }
-
   async componentDidMount() {
     setInterval(async () => {
       let request = `${server_addr}/all_messages`;
@@ -83,14 +82,15 @@ class ChatApp extends React.Component {
       }
     };
     return (
-      <div style={main_container}>
-        <StatusBar my_style={status_bar_style}/>
-        <ChatHistory
-	  my_style={chat_history_style}
-	  messages={this.state.msgs}
-	  />
+    <div style={main_container}>
+      <StatusBar my_style={status_bar_style}/>
+      <ChatHistory
+	       my_style={chat_history_style}
+	       messages={this.state.msgs}
+	    />
+
         <MsgInput
-	  my_style={message_input_style}
+	         my_style={message_input_style}
           updater={
 	    (msg) => this.setState({msgs:this.state.msgs.concat([msg])})
 	  }

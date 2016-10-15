@@ -16,10 +16,8 @@ class MsgInput extends React.Component {
   }
 
    async click_handler(event) {
-
     if((event.button == 0 || event.key == 'Enter')
         && this.state.msg !== ''&& this.state.username !== '') {
-
       let now = (new Date()).toLocaleTimeString();
       let new_message =
   	  `${this.state.username} [${now}]: ${this.state.msg}`;
@@ -37,8 +35,8 @@ class MsgInput extends React.Component {
       await fetch(request, req_opts);
       this.props.updater(this.state.msg);
       this.setState({msg: '', username : this.state.username});
-    }
   }
+}
 
   form_changed2(e) {
     const userName = e.currentTarget.value;
