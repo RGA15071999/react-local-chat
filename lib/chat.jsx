@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import MsgInput from './MsgInput';
 import StatusBar from './StatusBar';
 import ChatHistory from './chathistory';
-
 import {server_addr} from './globals';
 
 class ChatApp extends React.Component {
@@ -13,6 +12,7 @@ class ChatApp extends React.Component {
   constructor() {
     super();
     this.state = {msgs : []};
+    this.disconnect_user = this.disconnect_user.bind(this);
   }
 
   async componentWillUnmount() {
@@ -20,16 +20,17 @@ class ChatApp extends React.Component {
   }
 
   async componentDidMount() {
-
-    await fetch(`${server_addr}/connected`);
-
     setInterval(async () => {
-      let request = server_addr + '/all_messages';
+      let request = `${server_addr}/all_messages`;
       let messageHistory = await fetch(request);
       let all_history = await messageHistory.json();
       this.setState({msgs: all_history.payload});
     }, 500);
 
+  }
+
+  async disconnect_user() {
+    await fetch(`${server_addr}/disconnect`);
   }
 
   render() {
@@ -44,36 +45,41 @@ class ChatApp extends React.Component {
       textAlign:'center',
       borderRadius:'10px',
       backgroundColor:'#7e7a85',
-      marginLeft:'auto',
-      marginRight:'auto'
+      margin:'10px auto',
+      postition: 'absolute',
+      logo: {
+        postition: 'relative',
+        left: '5px',
+        margin: '2px'
+      }
     };
     let chat_history_style = {
       container:{
-	marginLeft:'5px',
-	marginRight:'5px',
-	overflowY:'scroll',
-	height:'300px'
+      	marginLeft:'5px',
+      	marginRight:'5px',
+      	overflowY:'scroll',
+      	height:'300px'
       },
       list_items:{
-	listStyleType:'none',
-	backgroundColor: '#36d1f7',
-	borderRadius: '5px 5px',
-	color: '#f6fdff',
-	margin:'0.5em auto',
-	padding: '.50rem',
-	width: '100%'
+      	listStyleType:'none',
+      	backgroundColor: '#36d1f7',
+      	borderRadius: '5px 5px',
+      	color: '#f6fdff',
+      	margin:'0.5em auto',
+      	padding: '.50rem',
+      	width: '100%'
       }
     };
-    let message_input_style = {
+  let message_input_style = {
       button:{
-	backgroundColor: '#4CAF50',
-	border: 'none',
-	width: '100%',
-	height: '1.5rem',
-	color: 'white',
-	margin: '.25rem',
-	justifyContent: 'center',
-	borderRadius: '5px'
+      	backgroundColor: '#4CAF50',
+      	border: 'none',
+      	width: '100%',
+      	height: '1.5rem',
+      	color: 'white',
+      	margin: '.25rem',
+      	justifyContent: 'center',
+      	borderRadius: '5px'
       }
     };
     return (
@@ -92,7 +98,7 @@ class ChatApp extends React.Component {
       </div>
     );
   }
-  
+
 };
 
 ReactDOM.render(<ChatApp />,

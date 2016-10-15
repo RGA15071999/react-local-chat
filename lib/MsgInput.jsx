@@ -15,12 +15,14 @@ class MsgInput extends React.Component {
     this.state = {msg : '', username: ''};
   }
 
-  async click_handler(event) {
-    if ((event.button === 0 || event.key == 'Enter') &&
-	this.state.msg !== '') {
+   async click_handler(event) {
+
+    if((event.button == 0 || event.key == 'Enter')
+        && this.state.msg !== ''&& this.state.username !== '') {
+
       let now = (new Date()).toLocaleTimeString();
       let new_message =
-	  `${this.state.username}[${now}]:${this.state.msg}`;
+  	  `${this.state.username} [${now}]: ${this.state.msg}`;
       let req_opts = {
         method:'post',
         headers: new Headers({
@@ -28,11 +30,10 @@ class MsgInput extends React.Component {
           'Content-Type': 'application/json'
         }),
         body:JSON.stringify({
-	  'msg':new_message
-	})
+  	     'msg':new_message
+        })
       };
-      let request = server_addr + '/message';
-      
+      let request = `${server_addr}/message`
       await fetch(request, req_opts);
       this.props.updater(this.state.msg);
       this.setState({msg: '', username : this.state.username});
@@ -53,26 +54,27 @@ class MsgInput extends React.Component {
     return (
       <div>
         <table>
-	  <tbody>
-            <tr>
-              <td>
-		<input type="text"
-                       onChange={this.form_changed2}
-                       value = {this.state.username}
-                       placeholder='Your Name' />
-              </td>
-              <td>
-		<input type="text"
-                       onChange={this.form_changed}
-                       value={this.state.msg}
-                       onKeyDown = {this.click_handler}
-                       placeholder='Message' />
-              </td>
-            </tr>
-	  </tbody>
-        </table>
-        <button onClick={this.click_handler}>
-	  Send
+            <tbody>
+              <tr>
+                <td>
+                  <input type="text"
+                          onChange={this.form_changed2}
+                          value = {this.state.username}
+                          placeholder='Your Name' />
+                </td>
+                <td>
+                <input type="text"
+                        onChange={this.form_changed}
+                        value={this.state.msg}
+                        onKeyDown = {this.click_handler}
+                        placeholder='Message' />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        <button onClick = {this.click_handler}>
+	        Send
         </button>
       </div>
     );
