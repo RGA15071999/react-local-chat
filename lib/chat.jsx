@@ -7,7 +7,6 @@ import StatusBar from './StatusBar';
 import ChatHistory from './chathistory';
 import {server_addr, web_sock_addr} from './globals';
 
-
 class ChatApp extends React.Component {
 
   constructor() {
@@ -73,10 +72,6 @@ class ChatApp extends React.Component {
 
   }
 
-  async disconnect_user() {
-    await fetch(`${server_addr}/disconnect`);
-  }
-
   render() {
     const main_container = {
       marginTop:'10px',
@@ -90,6 +85,12 @@ class ChatApp extends React.Component {
       borderRadius:'10px',
       backgroundColor:'#7e7a85',
       margin:'10px auto',
+      postition: 'absolute',
+      logo: {
+        postition: 'relative',
+        left: '5px',
+        margin: '2px'
+      }
     };
     const chat_history_style = {
       container:{
@@ -108,10 +109,11 @@ class ChatApp extends React.Component {
       	width: '85%'
       }
     };
-    const message_input_style = {
+   const message_input_style = {
       button:{
       	backgroundColor: '#4CAF50',
       	border: 'none',
+      	width: '100%',
       	height: '1.5rem',
       	color: 'white',
       	margin: '.25rem',

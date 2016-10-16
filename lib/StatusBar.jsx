@@ -15,10 +15,11 @@ class StatusBar extends React.Component{
       <div style={this.props.my_style}>
         <h1>
 	  <center>
-	    <em><a href={'https://iteratehackerspace.github.io'}>
-		iterate hackerspace</a>
-	    </em>
-	    programmers online: {this.props.users}
+	    <a href={'https://iteratehackerspace.github.io'}>
+  		<img style={this.props.my_style.logo}
+            src="https://ceremoniesbykatherine.files.wordpress.com/2013/10/logo-color.jpg"
+            width = "150"></img></a>
+	    programmers online: {this.state.usersNumber}
 	  </center>
 	</h1>
       </div>
