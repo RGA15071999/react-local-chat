@@ -47,16 +47,16 @@ ws_server.on('connection', ws => {
     case 'disconnect':
       currentUsers--; break;
     case 'user_count':
-      ws.send(JSON.stringify({reply:`${currentUsers}`}));
+      ws.send(JSON.stringify({users_count:`${currentUsers}`}));
       break;
     case 'new_message':
       messageHistory.push(client_reply.payload);
       const send_me_off = JSON.stringify({
-	message_type:'new_chat_message',
-	payload:client_reply.payload
+	       message_type:'new_chat_message',
+	        payload:client_reply.payload
       });
       ws_server.clients.forEach(client => {
-	client.send(send_me_off);
+	       client.send(send_me_off);
       });
       break;
       // Trivial case, just to keep the socket connection alive.

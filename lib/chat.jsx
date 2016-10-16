@@ -12,7 +12,7 @@ class ChatApp extends React.Component {
 
   constructor() {
     super();
-    this.state = {msgs : []};
+    this.state = {msgs : [], usersNumber : 0};
     this.conn = new WebSocket(web_sock_addr);
   }
 
@@ -27,34 +27,47 @@ class ChatApp extends React.Component {
 
     this.conn.onmessage = message => {
       const reply = JSON.parse(message.data);
+      if(reply.users_count) {
+        this.setState({usersNumber: reply.users_count});
+      } else if(reply.message_type) {
       switch (reply.message_type) {
-      case 'initial_message_load':
-	this.setState({msgs:reply.payload});
-	break;
-      case 'new_chat_message':
-	this.setState({msgs:this.state.msgs.concat([reply.payload])});
-	break;
-      default:
-	console.error('Unknown message reply type from server');
-      }
+        case 'initial_message_load':
+  	      this.setState({msgs:reply.payload});
+  	      break;
+        case 'new_chat_message':
+  	     this.setState({msgs:this.state.msgs.concat([reply.payload])});
+  	      break;
+        default:
+  	     console.error('Unknown message reply type from server');
+      }}
     };
 
     const initial_message_send_timer = setInterval(() => {
       if (this.conn.readyState === 1) {
-	this.conn.send(JSON.stringify({
-	  cmd:'connect'
-	}));
-	clearInterval(initial_message_send_timer);
+	       this.conn.send(JSON.stringify({
+	          cmd:'connect'
+	         }));
+	          clearInterval(initial_message_send_timer);
       }
     }, 500);
+
+    const users_count = setInterval(() => {
+      if (this.conn.readyState === 1) {
+	       this.conn.send(JSON.stringify({
+	          cmd:'user_count'
+	         }));
+	       clearInterval(initial_message_send_timer);
+      }
+    }, 500);
+
 
     // Heart beat, to keep the web socket alive, web browser's
     // amazingly don't provide a spec for this
     setInterval(() => {
       if (this.conn.readyState === 1) {
-	this.conn.send(JSON.stringify({
-	  cmd:'ping'
-	}));
+	       this.conn.send(JSON.stringify({
+	          cmd:'ping'
+	         }));
       }
     }, 15 * 1000);
 
@@ -77,38 +90,38 @@ class ChatApp extends React.Component {
     };
     const chat_history_style = {
       container:{
-	marginLeft:'5px',
-	marginRight:'5px',
-	height:'90%',
-	overflowY:'scroll'
+      	marginLeft:'5px',
+      	marginRight:'5px',
+      	height:'90%',
+      	overflowY:'scroll'
       },
       list_items:{
-	listStyleType:'none',
-	backgroundColor: '#36d1f7',
-	borderRadius: '5px 5px',
-	color: '#f6fdff',
-	margin:'0.5em auto',
-	padding: '.50rem',
-	width: '85%'
+      	listStyleType:'none',
+      	backgroundColor: '#36d1f7',
+      	borderRadius: '5px 5px',
+      	color: '#f6fdff',
+      	margin:'0.5em auto',
+      	padding: '.50rem',
+      	width: '85%'
       }
     };
     const message_input_style = {
       button:{
-	backgroundColor: '#4CAF50',
-	border: 'none',
-	height: '1.5rem',
-	color: 'white',
-	margin: '.25rem',
-	justifyContent: 'center',
-	borderRadius: '5px'
+      	backgroundColor: '#4CAF50',
+      	border: 'none',
+      	height: '1.5rem',
+      	color: 'white',
+      	margin: '.25rem',
+      	justifyContent: 'center',
+      	borderRadius: '5px'
       }
     };
     return (
       <div style={main_container}>
-        <StatusBar my_style={status_bar_style}/>
+        <StatusBar my_style={status_bar_style} users = {this.state.usersNumber}/>
         <ChatHistory
-	  my_style={chat_history_style}
-	  messages={this.state.msgs}
+	         my_style={chat_history_style}
+	          messages={this.state.msgs}
 	  />
         <MsgInput
 	  my_style={message_input_style}
@@ -120,7 +133,7 @@ class ChatApp extends React.Component {
       </div>
     );
   }
-  
+
 };
 
 ReactDOM.render(<ChatApp />,
